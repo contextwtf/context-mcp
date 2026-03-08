@@ -1,0 +1,28 @@
+{
+  "name": "@contextwtf/mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Context Markets — browse, trade, and create prediction markets from any AI agent",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "context-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "dependencies": {
+    "@contextwtf/sdk": "^0.3.4",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.3.1",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  },
+  "files": ["dist"],
+  "keywords": ["mcp", "context-markets", "prediction-markets", "ai-agent"],
+  "license": "MIT"
+}
