@@ -5,7 +5,7 @@
     "": {
       "name": "@contextwtf/mcp",
       "dependencies": {
-        "@contextwtf/sdk": "^0.3.6",
+        "@contextwtf/sdk": "^0.4.0",
         "@modelcontextprotocol/sdk": "^1.0.0",
         "dotenv": "^16.3.1",
         "zod": "^3.22.0",
@@ -19,7 +19,7 @@
   "packages": {
     "@adraffy/ens-normalize": ["@adraffy/ens-normalize@1.11.1", "", {}, "sha512-nhCBV3quEgesuf7c7KYfperqSS14T8bYuvJ8PcLJp6znkZpFc0AuW4qBtr8eKVyPPe/8RSr7sglCWPU5eaxwKQ=="],
 
-    "@contextwtf/sdk": ["@contextwtf/sdk@0.3.6", "", { "dependencies": { "viem": "^2.23.2" } }, "sha512-z20FJH9MCqKDN4YO1HUZ54Wsl3j2Sj904IRftIfsdxilrQL18CV0Lq3mt2hKQr/F2x5Vz9edXLNAxyFueiyC3g=="],
+    "@contextwtf/sdk": ["@contextwtf/sdk@0.4.0", "", { "dependencies": { "viem": "^2.23.2" } }, "sha512-HDNtKwpzBTsNtuZk6PzkGdHrGiNWWepFEmanZEfJschfolYpa/Kch3K16E44EGEEWpiKTsevmu2bJanIljq3mQ=="],
 
     "@hono/node-server": ["@hono/node-server@1.19.9", "", { "peerDependencies": { "hono": "^4" } }, "sha512-vHL6w3ecZsky+8P5MD+eFfaGTyCeOHUIFYMGpQGbrBTSmNNoxv0if69rEZ5giu36weC5saFuznL411gRX7bJDw=="],
 
