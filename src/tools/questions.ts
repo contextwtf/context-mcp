@@ -44,7 +44,7 @@ export function registerQuestionTools(server: Server) {
   // 2. Submit a fully-formed market draft directly
   server.tool(
     "context_agent_submit_market",
-    "Submit a fully-formed market draft directly, bypassing AI question generation. Returns a submissionId for tracking. Use this when you have a specific market structure in mind (question, resolution criteria, end time, etc). Requires CONTEXT_PRIVATE_KEY.",
+    "Submit a fully-formed market draft with custom resolution criteria, wait for oracle approval, and create the market on-chain. This may take 30-90 seconds. Use this when you want full control over question, criteria, sources, and end time. Requires CONTEXT_PRIVATE_KEY.",
     {
       formattedQuestion: z.string().describe("Full question text for the market"),
       shortQuestion: z.string().describe("Short display title for the market"),
@@ -59,7 +59,7 @@ export function registerQuestionTools(server: Server) {
     async (params) => {
       try {
         const client = getTradingClient();
-        const result = await client.questions.agentSubmit({
+        const submission = await client.questions.agentSubmitAndWait({
           market: {
             formattedQuestion: params.formattedQuestion,
             shortQuestion: params.shortQuestion,
@@ -72,7 +72,34 @@ export function registerQuestionTools(server: Server) {
             explanation: params.explanation,
           },
         });
-        return toolResult(result);
+
+        if (submission.status === "failed") {
+          return toolError(
+            "Oracle failed to process the market draft. Try adjusting your criteria."
+          );
+        }
+
+        if (submission.refuseToResolve) {
+          const reasons = submission.rejectionReasons
+            ?.map((r: { message: string }) => r.message)
+            .join("; ");
+          return toolError(
+            `Market draft rejected: ${reasons || "Unknown reason"}`
+          );
+        }
+
+        if (!submission.questions?.length) {
+          return toolError("Oracle returned no market questions.");
+        }
+
+        const generated = submission.questions[0];
+        const market = await client.markets.create(generated.id);
+
+        return toolResult({
+          message: "Market created successfully!",
+          market,
+          generatedQuestion: generated,
+        });
       } catch (error) {
         return toolError(error);
       }
