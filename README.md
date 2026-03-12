@@ -38,19 +38,29 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-### Environment Variables
+## Available Tools
+
+### Read-only (no auth needed)
+
+`context_list_markets` · `context_get_market` · `context_get_quotes` · `context_get_orderbook` · `context_simulate_trade` · `context_price_history` · `context_get_oracle` · `context_global_activity`
+
+### Trading (requires API key + private key)
+
+`context_place_order` · `context_cancel_order` · `context_my_orders` · `context_get_portfolio` · `context_get_balance` · `context_account_setup` · `context_mint_test_usdc` · `context_create_market`
+
+## Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `CONTEXT_API_KEY` | For all tools | API key from context.markets |
-| `CONTEXT_PRIVATE_KEY` | For trading tools only | Ethereum private key for signing |
+| `CONTEXT_PRIVATE_KEY` | For trading only | Ethereum private key for signing |
 
-Read-only tools work with zero config.
+Read-only tools work with zero config. Need an API key? Visit [context.markets](https://context.markets).
 
 ## Documentation
 
-- **[Tool Catalog](https://docs.context.markets/agents/mcp/tools)** — full list of available tools and parameters
-- **[MCP Guide](https://docs.context.markets/agents/mcp)** — setup, configuration, and usage
+- **[Tool Catalog](https://docs.context.markets/agents/mcp/tools)** — full list of tools with parameters and examples
+- **[MCP Guide](https://docs.context.markets/agents/mcp)** — setup, configuration, and usage patterns
 
 ## Ecosystem
 
