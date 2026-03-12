@@ -1,8 +1,17 @@
-# Context Markets MCP Server
+<p align="center">
+  <img src="https://mainnet.contextcdn.com/ced823d63df9dff0390d9ad0a4e1ad3905dd199a6c50758c18a5c92a203adbd7" alt="Context" width="100%" />
+</p>
 
-Browse, trade, and create prediction markets from any AI agent.
+<h1 align="center">Context MCP Server</h1>
+<p align="center">Browse, trade, and create prediction markets from any AI agent.</p>
 
-## Quickstart: Claude Desktop
+<p align="center">
+  <a href="https://www.npmjs.com/package/@contextwtf/mcp"><img src="https://img.shields.io/npm/v/@contextwtf/mcp" alt="npm" /></a>
+  <a href="https://github.com/contextwtf/context-mcp/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT" /></a>
+  <a href="https://discord.gg/RVmzZsAyM4"><img src="https://img.shields.io/badge/Discord-Join-7289da" alt="Discord" /></a>
+</p>
+
+## Quick Start: Claude Desktop
 
 Add to your Claude Desktop config (`claude_desktop_config.json`):
 
@@ -71,3 +80,22 @@ bun install
 bun run build
 node dist/index.js
 ```
+
+## Documentation
+
+Full tool reference and usage guides at **[docs.context.markets](https://docs.context.markets/agents/mcp)**.
+
+## Ecosystem
+
+| Package | Description |
+|---------|-------------|
+| **[context-markets](https://github.com/contextwtf/context-sdk)** | TypeScript SDK for trading |
+| **[@contextwtf/react](https://github.com/contextwtf/context-react)** | React hooks for market data and trading |
+| **[@contextwtf/mcp](https://github.com/contextwtf/context-mcp)** | MCP server for AI agents |
+| **[@contextwtf/cli](https://github.com/contextwtf/context-cli)** | CLI for trading from the terminal |
+| **[context-skills](https://github.com/contextwtf/context-skills)** | AI agent skill files |
+| **[context-plugin](https://github.com/contextwtf/context-plugin)** | Claude Code plugin |
+
+## License
+
+MIT — see [LICENSE](./LICENSE) for details.
