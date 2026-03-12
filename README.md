@@ -11,9 +11,17 @@
   <a href="https://discord.gg/RVmzZsAyM4"><img src="https://img.shields.io/badge/Discord-Join-7289da" alt="Discord" /></a>
 </p>
 
-## Quick Start: Claude Desktop
+## Quick Start
 
-Add to your Claude Desktop config (`claude_desktop_config.json`):
+### Claude Code
+
+```bash
+claude mcp add context-markets -- npx @contextwtf/mcp
+```
+
+### Claude Desktop
+
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
@@ -30,60 +38,19 @@ Add to your Claude Desktop config (`claude_desktop_config.json`):
 }
 ```
 
-## Quickstart: Claude Code
-
-```bash
-claude mcp add context-markets -- npx @contextwtf/mcp
-```
-
-## Available Tools
-
-### Read-only (no auth needed)
-
-| Tool | Description | Key Params |
-|------|-------------|------------|
-| `context_list_markets` | List and search prediction markets | `query`, `status`, `category`, `sortBy`, `limit` |
-| `context_get_market` | Get detailed market information | `marketId` |
-| `context_get_quotes` | Get bid/ask/last prices for a market | `marketId` |
-| `context_get_orderbook` | Get the orderbook (bid/ask ladder) | `marketId`, `depth` |
-| `context_simulate_trade` | Simulate a trade without executing | `marketId`, `side`, `amount` |
-| `context_price_history` | Get historical price data | `marketId`, `timeframe` |
-| `context_get_oracle` | Get AI oracle resolution analysis | `marketId` |
-| `context_global_activity` | Get recent trading activity across all markets | -- |
-
-### Trading (requires API key + private key)
-
-| Tool | Description | Key Params |
-|------|-------------|------------|
-| `context_place_order` | Place a buy order (limit or market) | `marketId`, `side`, `size`, `price` |
-| `context_cancel_order` | Cancel an open order | `nonce` |
-| `context_my_orders` | List your open orders | `marketId` |
-| `context_get_portfolio` | Get positions with P&L | `kind` |
-| `context_get_balance` | Get USDC balance and token holdings | -- |
-| `context_account_setup` | Approve USDC spending for trading | -- |
-| `context_mint_test_usdc` | Mint test USDC on Base Sepolia | `amount` |
-| `context_create_market` | Create a market from a question | `question` |
-
-## Environment Variables
+### Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `CONTEXT_API_KEY` | For all tools | API key from context.markets |
-| `CONTEXT_PRIVATE_KEY` | For trading tools only | Ethereum private key for signing transactions |
+| `CONTEXT_PRIVATE_KEY` | For trading tools only | Ethereum private key for signing |
 
 Read-only tools work with zero config.
 
-## Development
-
-```bash
-bun install
-bun run build
-node dist/index.js
-```
-
 ## Documentation
 
-Full tool reference and usage guides at **[docs.context.markets](https://docs.context.markets/agents/mcp)**.
+- **[Tool Catalog](https://docs.context.markets/agents/mcp/tools)** — full list of available tools and parameters
+- **[MCP Guide](https://docs.context.markets/agents/mcp)** — setup, configuration, and usage
 
 ## Ecosystem
 
