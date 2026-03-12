@@ -1,4 +1,4 @@
-import { ContextClient } from "@contextwtf/sdk";
+import { ContextClient } from "context-markets";
 
 let readClientInstance: ContextClient | null = null;
 let tradingClientInstance: ContextClient | null = null;
