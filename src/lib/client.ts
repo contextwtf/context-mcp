@@ -1,12 +1,17 @@
-import { ContextClient } from "context-markets";
+import { ContextClient, type ChainOption } from "context-markets";
 
 let readClientInstance: ContextClient | null = null;
 let tradingClientInstance: ContextClient | null = null;
+
+function getChain(): ChainOption {
+  return process.env.CONTEXT_CHAIN === "testnet" ? "testnet" : "mainnet";
+}
 
 export function getReadClient(): ContextClient {
   if (!readClientInstance) {
     readClientInstance = new ContextClient({
       apiKey: process.env.CONTEXT_API_KEY,
+      chain: getChain(),
     });
   }
   return readClientInstance;
@@ -24,6 +29,7 @@ export function getTradingClient(): ContextClient {
     }
     tradingClientInstance = new ContextClient({
       apiKey,
+      chain: getChain(),
       signer: { privateKey: privateKey as `0x${string}` },
     });
   }
