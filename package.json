@@ -24,5 +24,14 @@
   },
   "files": ["dist"],
   "keywords": ["mcp", "context-markets", "prediction-markets", "ai-agent"],
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://docs.context.markets/agents/mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/contextwtf/context-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/contextwtf/context-mcp/issues"
+  },
+  "author": "Context"
 }
