@@ -1,6 +1,6 @@
 {
   "name": "context-markets-mcp",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "MCP server for Context Markets — browse, trade, and create prediction markets from any AI agent",
   "type": "module",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
     "dev": "tsc && node dist/index.js"
   },
   "dependencies": {
-    "context-markets": "^0.5.1",
+    "context-markets": "^0.6.0",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "dotenv": "^16.3.1",
     "zod": "^3.22.0"

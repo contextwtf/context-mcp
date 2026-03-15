@@ -12,7 +12,7 @@ export function registerAccountTools(server: Server) {
       try {
         const client = getTradingClient();
         const status = await client.account.status();
-        if (!status.needsApprovals) {
+        if (status.isReady) {
           return toolResult({
             message: "Account already set up.",
             status,
