@@ -6,7 +6,7 @@ export function registerPortfolioTools(server: Server) {
   // 1. Get portfolio positions
   server.tool(
     "context_get_portfolio",
-    "Get your prediction market positions with P&L. Filter by kind: all, active, won, lost, or claimable. Requires CONTEXT_PRIVATE_KEY.",
+    "Get your prediction market positions with P&L. Filter by kind: all, active, won, lost, or claimable. Requires a wallet — run context_generate_wallet first if not set up.",
     {
       kind: z
         .enum(["all", "active", "won", "lost", "claimable"])
@@ -29,7 +29,7 @@ export function registerPortfolioTools(server: Server) {
   // 2. Get balance
   server.tool(
     "context_get_balance",
-    "Get your USDC balance (wallet + settlement) and outcome token holdings. Requires CONTEXT_PRIVATE_KEY.",
+    "Get your USDC balance (wallet + settlement) and outcome token holdings. Requires a wallet — run context_generate_wallet first if not set up.",
     {},
     async () => {
       try {

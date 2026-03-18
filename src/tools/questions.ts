@@ -6,7 +6,7 @@ export function registerQuestionTools(server: Server) {
   // 1. Create a new prediction market from a question
   server.tool(
     "context_create_market",
-    "Create a new prediction market from a natural language question. The AI oracle processes the question and generates a market. This may take 30-90 seconds. Requires CONTEXT_PRIVATE_KEY.",
+    "Create a new prediction market from a natural language question. The AI oracle processes the question and generates a market. This may take 30-90 seconds. Requires a wallet — run context_generate_wallet first if not set up.",
     {
       question: z
         .string()

@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
+import { loadConfig } from "./lib/config.js";
 
 import { registerMarketTools } from "./tools/markets.js";
 import { registerOrderTools } from "./tools/orders.js";
@@ -11,14 +9,34 @@ import { registerPortfolioTools } from "./tools/portfolio.js";
 import { registerAccountTools } from "./tools/account.js";
 import { registerQuestionTools } from "./tools/questions.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-dotenv.config({ path: resolve(__dirname, "..", ".env") });
+// Load keys from ~/.config/context/config.env (shared with the CLI).
+// Env vars take precedence — config file fills in what's missing.
+const config = loadConfig();
+for (const [key, value] of Object.entries(config)) {
+  if (!process.env[key]) {
+    process.env[key] = value;
+  }
+}
 
-const server = new McpServer({
-  name: "context-markets",
-  version: "0.1.0",
-});
+const server = new McpServer(
+  {
+    name: "context-markets",
+    version: "0.1.0",
+  },
+  {
+    instructions:
+      "Context Markets MCP — trade prediction markets from any AI agent.\n\n" +
+      "ONBOARDING: Before any trading operation, the user needs a wallet. " +
+      "If a trading tool fails with 'No wallet configured', guide the user through setup:\n" +
+      "1. Run context_generate_wallet to create or import a wallet.\n" +
+      "2. The user needs ETH on Base for gas fees — show them their address.\n" +
+      "3. Run context_account_setup to approve contracts.\n" +
+      "4. Deposit USDC with context_deposit.\n\n" +
+      "Read-only tools (context_list_markets, context_get_market, context_get_quotes, etc.) " +
+      "work without a wallet. Only trading, portfolio, and account tools require one.\n\n" +
+      "IMPORTANT: Never generate a wallet or overwrite an existing one without explicit user confirmation.",
+  },
+);
 
 registerMarketTools(server);
 registerOrderTools(server);
