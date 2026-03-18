@@ -6,7 +6,7 @@ export function registerOrderTools(server: Server) {
   // 1. Place a buy order
   server.tool(
     "context_place_order",
-    "Place a buy order on a prediction market. Requires CONTEXT_PRIVATE_KEY. Prices in cents (1-99), size in contracts (min 0.01).",
+    "Place a buy order on a prediction market. Prices in cents (1-99), size in contracts (min 0.01). Requires a wallet — run context_generate_wallet first if not set up.",
     {
       marketId: z.string().describe("The unique identifier of the market"),
       side: z.enum(["yes", "no"]).describe("Which outcome to buy: yes or no"),
@@ -47,7 +47,7 @@ export function registerOrderTools(server: Server) {
   // 2. Cancel an open order
   server.tool(
     "context_cancel_order",
-    "Cancel an open order by its nonce. Requires CONTEXT_PRIVATE_KEY.",
+    "Cancel an open order by its nonce. Requires a wallet — run context_generate_wallet first if not set up.",
     {
       nonce: z.string().describe("The nonce of the order to cancel"),
     },
@@ -67,7 +67,7 @@ export function registerOrderTools(server: Server) {
   // 3. List open orders
   server.tool(
     "context_my_orders",
-    "List your open orders, optionally filtered to a specific market. Requires CONTEXT_PRIVATE_KEY.",
+    "List your open orders, optionally filtered to a specific market. Requires a wallet — run context_generate_wallet first if not set up.",
     {
       marketId: z
         .string()
