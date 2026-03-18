@@ -115,10 +115,10 @@ export function registerAccountTools(server: Server) {
           address: s.address,
           ethBalance: formatEther(s.ethBalance ?? 0n),
           usdcBalance: s.usdcBalance ? (Number(s.usdcBalance) / 1e6).toFixed(2) : "0.00",
-          isReady: !status.needsUsdcApproval && !status.needsOperatorApproval,
-          needsUsdcApproval: status.needsUsdcApproval,
-          needsOperatorApproval: status.needsOperatorApproval,
-          nextSteps: (status.needsUsdcApproval || status.needsOperatorApproval)
+          isReady: !status.needsApprovals,
+          needsApprovals: status.needsApprovals,
+          isOperatorApproved: status.isOperatorApproved,
+          nextSteps: status.needsApprovals
             ? [
                 ...(s.ethBalance < MIN_ETH_FOR_GAS
                   ? [`Send ETH to ${s.address} on Base for gas fees.`]
@@ -145,7 +145,7 @@ export function registerAccountTools(server: Server) {
       try {
         const client = getTradingClient();
         const status = await client.account.status();
-        if (status.isReady) {
+        if (!status.needsApprovals) {
           return toolResult({
             message: "Account already set up.",
             status,
