@@ -1,28 +1,37 @@
-# Context Markets MCP Server
+<p align="center">
+  <img src="https://mainnet.contextcdn.com/ced823d63df9dff0390d9ad0a4e1ad3905dd199a6c50758c18a5c92a203adbd7" alt="Context" width="100%" />
+</p>
 
-Browse, trade, and create prediction markets from any AI agent.
+<h1 align="center">Context MCP Server</h1>
+<p align="center">Browse, trade, and create prediction markets from any AI agent.</p>
 
-## Install
+<p align="center">
+  <a href="https://github.com/contextwtf/context-mcp"><img src="https://img.shields.io/npm/v/context-markets-mcp" alt="npm" /></a>
+  <a href="https://github.com/contextwtf/context-mcp/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT" /></a>
+  <a href="https://discord.gg/RVmzZsAyM4"><img src="https://img.shields.io/badge/Discord-Join-7289da" alt="Discord" /></a>
+</p>
+
+## Quick Start
+
+### Claude Code
+
+```bash
+claude mcp add context-markets -- npx context-markets-mcp
+```
 
 ### Claude Desktop
 
-Add to your Claude Desktop config (`claude_desktop_config.json`):
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "context-markets": {
       "command": "npx",
-      "args": ["@contextwtf/mcp"]
+      "args": ["context-markets-mcp"]
     }
   }
 }
-```
-
-### Claude Code
-
-```bash
-claude mcp add context-markets -- npx @contextwtf/mcp
 ```
 
 No environment variables needed — the server walks you through setup on first use.
@@ -60,16 +69,7 @@ Need an API key? Visit [context.markets](https://context.markets).
 
 ### Read-only (no wallet needed)
 
-| Tool | Description | Key Params |
-|------|-------------|------------|
-| `context_list_markets` | List and search prediction markets | `query`, `status`, `category`, `sortBy`, `limit` |
-| `context_get_market` | Get detailed market information | `marketId` |
-| `context_get_quotes` | Get bid/ask/last prices for a market | `marketId` |
-| `context_get_orderbook` | Get the orderbook (bid/ask ladder) | `marketId`, `depth` |
-| `context_simulate_trade` | Simulate a trade without executing | `marketId`, `side`, `amount` |
-| `context_price_history` | Get historical price data | `marketId`, `timeframe` |
-| `context_get_oracle` | Get AI oracle resolution analysis | `marketId` |
-| `context_global_activity` | Get recent trading activity across all markets | -- |
+`context_list_markets` · `context_get_market` · `context_get_quotes` · `context_get_orderbook` · `context_simulate_trade` · `context_price_history` · `context_get_oracle` · `context_global_activity`
 
 ### Account setup
 
@@ -99,25 +99,22 @@ Need an API key? Visit [context.markets](https://context.markets).
 - **Read-only tools work with zero config.** Trading tools need a wallet — run `context_generate_wallet` first.
 - **Shared config.** The MCP server and [CLI](https://github.com/contextwtf/context-cli) share `~/.config/context/config.env`, so you only set up once.
 
+## Documentation
+
+- **[Tool Catalog](https://docs.context.markets/agents/mcp/tools)** — full list of tools with parameters and examples
+- **[MCP Guide](https://docs.context.markets/agents/mcp)** — setup, configuration, and usage patterns
+
 ## Ecosystem
 
 | Package | Description |
 |---------|-------------|
-| [context-markets](https://github.com/contextwtf/context-sdk) | TypeScript SDK |
-| [context-markets-react](https://github.com/contextwtf/context-react) | React hooks |
-| [context-markets-mcp](https://github.com/contextwtf/context-mcp) | MCP server for AI agents |
-| [context-markets-cli](https://github.com/contextwtf/context-cli) | CLI |
-| [context-skills](https://github.com/contextwtf/context-skills) | AI agent skill files |
-| [context-plugin](https://github.com/contextwtf/context-plugin) | Claude Code plugin |
-
-## Development
-
-```bash
-bun install
-bun run build
-node dist/index.js
-```
+| **[context-markets](https://github.com/contextwtf/context-sdk)** | TypeScript SDK for trading |
+| **[context-markets-react](https://github.com/contextwtf/context-react)** | React hooks for market data and trading |
+| **[context-markets-mcp](https://github.com/contextwtf/context-mcp)** | MCP server for AI agents |
+| **[context-markets-cli](https://github.com/contextwtf/context-cli)** | CLI for trading from the terminal |
+| **[context-skills](https://github.com/contextwtf/context-skills)** | AI agent skill files |
+| **[context-plugin](https://github.com/contextwtf/context-plugin)** | Claude Code plugin |
 
 ## License
 
-MIT
+MIT — see [LICENSE](./LICENSE) for details.
