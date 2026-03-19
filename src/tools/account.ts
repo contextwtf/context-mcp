@@ -115,10 +115,11 @@ export function registerAccountTools(server: Server) {
           address: s.address,
           ethBalance: formatEther(s.ethBalance ?? 0n),
           usdcBalance: s.usdcBalance ? (Number(s.usdcBalance) / 1e6).toFixed(2) : "0.00",
-          isReady: !status.needsApprovals,
-          needsApprovals: status.needsApprovals,
+          isReady: status.isReady,
+          needsUsdcApproval: status.needsUsdcApproval,
+          needsOperatorApproval: status.needsOperatorApproval,
           isOperatorApproved: status.isOperatorApproved,
-          nextSteps: status.needsApprovals
+          nextSteps: !status.isReady
             ? [
                 ...(s.ethBalance < MIN_ETH_FOR_GAS
                   ? [`Send ETH to ${s.address} on Base for gas fees.`]
@@ -145,7 +146,7 @@ export function registerAccountTools(server: Server) {
       try {
         const client = getTradingClient();
         const status = await client.account.status();
-        if (!status.needsApprovals) {
+        if (status.isReady) {
           return toolResult({
             message: "Account already set up.",
             status,
@@ -188,7 +189,33 @@ export function registerAccountTools(server: Server) {
     }
   );
 
-  // 5. Mint test USDC
+  // 5. Withdraw USDC
+  server.tool(
+    "context_withdraw",
+    "Withdraw USDC from the exchange back to your wallet. " +
+    "Requires a wallet — run context_generate_wallet first if not set up.",
+    {
+      amount: z
+        .number()
+        .positive()
+        .describe("Amount of USDC to withdraw"),
+    },
+    async (params) => {
+      try {
+        const client = getTradingClient();
+        const txHash = await client.account.withdraw(params.amount);
+        return toolResult({
+          message: `Withdrew $${params.amount.toFixed(2)} USDC successfully.`,
+          amount: params.amount,
+          txHash,
+        });
+      } catch (error) {
+        return toolError(error);
+      }
+    }
+  );
+
+  // 6. Mint test USDC
   server.tool(
     "context_mint_test_usdc",
     "Mint test USDC on Base Sepolia testnet for paper trading. Default 1000 USDC. " +
