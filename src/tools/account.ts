@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import { formatEther } from "viem";
+import { formatEther, formatUnits } from "viem";
 import { getTradingClient, resetTradingClient } from "../lib/client.js";
 import { loadConfig, saveConfig, configPath } from "../lib/config.js";
 import { toolResult, toolError, type Server } from "../lib/utils.js";
@@ -36,29 +36,44 @@ export function registerAccountTools(server: Server) {
     },
     async (params) => {
       try {
-        // Check if a wallet is already configured (env or config file)
-        const existingKey = process.env.CONTEXT_PRIVATE_KEY || loadConfig().CONTEXT_PRIVATE_KEY;
+        const existingConfig = loadConfig();
+        const existingKey =
+          process.env.CONTEXT_PRIVATE_KEY || existingConfig.CONTEXT_PRIVATE_KEY;
+        const hasExistingWallet = Boolean(existingKey);
+
+        if (hasExistingWallet && params.privateKey && !params.overwrite) {
+          return toolError(
+            "A wallet is already configured. Set overwrite: true to replace it. WARNING: This will replace your existing wallet permanently."
+          );
+        }
 
         if (existingKey && !params.overwrite) {
+          if (params.apiKey) {
+            saveConfig({ CONTEXT_API_KEY: params.apiKey });
+            process.env.CONTEXT_API_KEY = params.apiKey;
+          }
           const account = privateKeyToAccount(existingKey as `0x${string}`);
           return toolResult({
-            status: "wallet_exists",
+            status: params.apiKey ? "api_key_saved" : "wallet_exists",
             address: account.address,
             configPath: configPath(),
+            saved: Boolean(params.apiKey),
             message:
-              "A wallet is already configured. Use context_wallet_status for full details. " +
-              "To replace it, call this tool again with overwrite: true — but confirm with the user first, " +
-              "as the old key will be lost.",
+              params.apiKey
+                ? "API key saved. Existing wallet left unchanged."
+                : "A wallet is already configured. Use context_wallet_status for full details. " +
+                  "To replace it, call this tool again with overwrite: true — but confirm with the user first, " +
+                  "as the old key will be lost.",
           });
         }
 
         // Validate imported key
         let key: string;
         if (params.privateKey) {
-          if (!params.privateKey.startsWith("0x") || params.privateKey.length !== 66) {
-            return toolResult({
-              error: "Invalid private key format. Must be 0x-prefixed + 64 hex characters.",
-            });
+          if (!/^0x[0-9a-fA-F]{64}$/.test(params.privateKey)) {
+            return toolError(
+              "Invalid private key format. Expected 0x-prefixed 64-character hex string."
+            );
           }
           key = params.privateKey;
         } else {
@@ -82,11 +97,11 @@ export function registerAccountTools(server: Server) {
         return toolResult({
           status: params.privateKey ? "imported" : "generated",
           address: account.address,
-          privateKey: key,
-          savedTo: configPath(),
+          saved: true,
+          configPath: configPath(),
           message: params.privateKey
-            ? "Wallet imported and saved."
-            : "New wallet generated and saved. Back up your private key — it cannot be recovered.",
+            ? "Wallet imported and saved. Private key stored securely in config file."
+            : "Wallet generated and saved. Private key stored securely in config file.",
           nextSteps: [
             "Fund the wallet with ETH on Base for gas fees.",
             "Run context_account_setup to approve contracts for trading.",
@@ -109,20 +124,28 @@ export function registerAccountTools(server: Server) {
     async () => {
       try {
         const client = getTradingClient();
-        const status = await client.account.status();
-        const s = status as any;
+        const [status, balance] = await Promise.all([
+          client.account.status(),
+          client.portfolio.balance(),
+        ]);
+        const isReady = !status.needsApprovals;
+        const ethBalance = formatEther(status.ethBalance);
+        const usdcBalance = formatUnits(BigInt(balance.usdc.balance), 6);
+        const usdcAllowance = formatUnits(status.usdcAllowance, 6);
+
         return toolResult({
-          address: s.address,
-          ethBalance: formatEther(s.ethBalance ?? 0n),
-          usdcBalance: s.usdcBalance ? (Number(s.usdcBalance) / 1e6).toFixed(2) : "0.00",
-          isReady: status.isReady,
-          needsUsdcApproval: status.needsUsdcApproval,
-          needsOperatorApproval: status.needsOperatorApproval,
+          address: status.address,
+          ethBalance,
+          usdcBalance,
+          usdcAllowance,
+          isReady,
+          needsApprovals: status.needsApprovals,
+          needsGaslessSetup: status.needsGaslessSetup,
           isOperatorApproved: status.isOperatorApproved,
-          nextSteps: !status.isReady
+          nextSteps: !isReady
             ? [
-                ...(s.ethBalance < MIN_ETH_FOR_GAS
-                  ? [`Send ETH to ${s.address} on Base for gas fees.`]
+                ...(status.ethBalance < MIN_ETH_FOR_GAS
+                  ? [`Send ETH to ${status.address} on Base for gas fees.`]
                   : []),
                 "Run context_account_setup to approve contracts.",
                 "Run context_deposit to deposit USDC for trading.",
@@ -146,7 +169,7 @@ export function registerAccountTools(server: Server) {
       try {
         const client = getTradingClient();
         const status = await client.account.status();
-        if (status.isReady) {
+        if (!status.needsApprovals) {
           return toolResult({
             message: "Account already set up.",
             status,

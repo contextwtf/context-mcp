@@ -1,5 +1,12 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
+export function validateHexNonce(nonce: string): `0x${string}` {
+  if (!/^0x[0-9a-fA-F]+$/.test(nonce)) {
+    throw new Error("Invalid nonce format: expected 0x-prefixed hex string");
+  }
+  return nonce as `0x${string}`;
+}
+
 export function toolResult(data: unknown) {
   return {
     content: [

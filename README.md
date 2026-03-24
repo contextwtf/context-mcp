@@ -6,7 +6,7 @@
 <p align="center">Browse, trade, and create prediction markets from any AI agent.</p>
 
 <p align="center">
-  <a href="https://github.com/contextwtf/context-mcp"><img src="https://img.shields.io/npm/v/context-markets-mcp" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/context-markets-mcp"><img src="https://img.shields.io/npm/v/context-markets-mcp" alt="npm" /></a>
   <a href="https://github.com/contextwtf/context-mcp/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT" /></a>
   <a href="https://discord.gg/RVmzZsAyM4"><img src="https://img.shields.io/badge/Discord-Join-7289da" alt="Discord" /></a>
 </p>
@@ -69,9 +69,18 @@ Need an API key? Visit [context.markets](https://context.markets).
 
 ### Read-only (no wallet needed)
 
-`context_list_markets` · `context_get_market` · `context_get_quotes` · `context_get_orderbook` · `context_simulate_trade` · `context_price_history` · `context_get_oracle` · `context_global_activity`
+| Tool | Description | Key Params |
+|------|-------------|------------|
+| `context_list_markets` | List and search prediction markets on Context Markets | `query`, `status`, `category`, `sortBy`, `limit` |
+| `context_get_market` | Get detailed information about a specific prediction market | `marketId` |
+| `context_get_quotes` | Get current bid/ask/last prices for a market's YES and NO outcomes | `marketId` |
+| `context_get_orderbook` | Get the orderbook (bid/ask ladder) for a market | `marketId`, `depth` |
+| `context_simulate_trade` | Simulate a trade to estimate fill price, cost, and slippage | `marketId`, `side`, `amount` |
+| `context_price_history` | Get historical price data for a market over a specified timeframe | `marketId`, `timeframe` |
+| `context_get_oracle` | Get the AI oracle's resolution analysis for a market | `marketId` |
+| `context_global_activity` | Get recent trading activity across all markets | -- |
 
-### Account setup
+### Account setup and funding
 
 | Tool | Description | Key Params |
 |------|-------------|------------|
@@ -79,18 +88,34 @@ Need an API key? Visit [context.markets](https://context.markets).
 | `context_wallet_status` | Get address, balances, and approval status | -- |
 | `context_account_setup` | Approve USDC spending and operator permissions | -- |
 | `context_deposit` | Deposit USDC into the exchange | `amount` |
+| `context_withdraw` | Withdraw USDC from the exchange back to your wallet | `amount` |
 | `context_mint_test_usdc` | Mint test USDC on Base Sepolia | `amount` |
 
-### Trading
+### Trading and orders
 
 | Tool | Description | Key Params |
 |------|-------------|------------|
-| `context_place_order` | Place a buy order (limit or market) | `marketId`, `side`, `size`, `price` |
+| `context_place_order` | Place a buy or sell order on a prediction market | `marketId`, `outcome`, `side`, `size`, `price` |
 | `context_cancel_order` | Cancel an open order | `nonce` |
+| `context_cancel_replace_order` | Atomically cancel an existing order and place a new one | `cancelNonce`, `marketId`, `outcome`, `side`, `priceCents`, `size` |
 | `context_my_orders` | List your open orders | `marketId` |
+| `context_bulk_create_orders` | Create multiple orders in a single atomic batch | `orders` |
+| `context_bulk_cancel_orders` | Cancel multiple open orders in a single batch | `nonces` |
+| `context_bulk_orders` | Atomically create and cancel orders in a single batch | `creates`, `cancelNonces` |
+
+### Portfolio
+
+| Tool | Description | Key Params |
+|------|-------------|------------|
 | `context_get_portfolio` | Get positions with P&L | `kind` |
 | `context_get_balance` | Get USDC balance and token holdings | -- |
+
+### Market creation
+
+| Tool | Description | Key Params |
+|------|-------------|------------|
 | `context_create_market` | Create a market from a question | `question` |
+| `context_agent_submit_market` | Submit a fully formed market draft, wait for oracle approval, and create it on-chain | `formattedQuestion`, `shortQuestion`, `marketType`, `evidenceMode`, `resolutionCriteria`, `endTime` |
 
 ## Key Concepts
 

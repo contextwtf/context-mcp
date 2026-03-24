@@ -21,7 +21,7 @@ for (const [key, value] of Object.entries(config)) {
 const server = new McpServer(
   {
     name: "context-markets",
-    version: "0.1.0",
+    version: "0.2.1",
   },
   {
     instructions:
@@ -33,7 +33,7 @@ const server = new McpServer(
       "3. Run context_account_setup to approve contracts.\n" +
       "4. Deposit USDC with context_deposit.\n\n" +
       "Read-only tools (context_list_markets, context_get_market, context_get_quotes, etc.) " +
-      "work without a wallet. Only trading, portfolio, and account tools require one.\n\n" +
+      "work without a wallet. Trading, portfolio, account, and market creation tools require a private key.\n\n" +
       "IMPORTANT: Never generate a wallet or overwrite an existing one without explicit user confirmation.",
   },
 );

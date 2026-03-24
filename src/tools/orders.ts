@@ -1,7 +1,12 @@
 import { z } from "zod";
 import type { PlaceOrderRequest } from "context-markets";
 import { getTradingClient } from "../lib/client.js";
-import { toolResult, toolError, type Server } from "../lib/utils.js";
+import {
+  toolResult,
+  toolError,
+  validateHexNonce,
+  type Server,
+} from "../lib/utils.js";
 
 // ---------------------------------------------------------------------------
 // Shared schemas and helpers
@@ -66,6 +71,8 @@ export function registerOrderTools(server: Server) {
     "Place a buy or sell order on a prediction market. " +
     "Prices in cents (1-99), size in contracts (min 0.01). " +
     "Omit price for a market order. " +
+    "Note: Market orders (no price specified) will fill at any price up to 99 cents. " +
+    "For tighter price control, specify a limit price. " +
     "Requires a wallet — run context_generate_wallet first if not set up.",
     {
       marketId: z.string().describe("The unique identifier of the market"),
@@ -125,9 +132,7 @@ export function registerOrderTools(server: Server) {
     async (params) => {
       try {
         const client = getTradingClient();
-        const result = await client.orders.cancel(
-          params.nonce as `0x${string}`
-        );
+        const result = await client.orders.cancel(validateHexNonce(params.nonce));
         return toolResult(result);
       } catch (error) {
         return toolError(error);
@@ -156,7 +161,7 @@ export function registerOrderTools(server: Server) {
       try {
         const client = getTradingClient();
         const result = await client.orders.cancelReplace(
-          params.cancelNonce as `0x${string}`,
+          validateHexNonce(params.cancelNonce),
           buildOrderRequest({
             marketId: params.marketId,
             outcome: params.outcome,
@@ -251,7 +256,7 @@ export function registerOrderTools(server: Server) {
       try {
         const client = getTradingClient();
         const result = await client.orders.bulkCancel(
-          params.nonces as `0x${string}`[]
+          params.nonces.map(validateHexNonce)
         );
         return toolResult(result);
       } catch (error) {
@@ -296,7 +301,7 @@ export function registerOrderTools(server: Server) {
             takerOnly: o.takerOnly,
           })
         );
-        const cancelNonces = (params.cancelNonces ?? []) as `0x${string}`[];
+        const cancelNonces = (params.cancelNonces ?? []).map(validateHexNonce);
         const result = await client.orders.bulk(creates, cancelNonces);
         return toolResult(result);
       } catch (error) {

@@ -7,7 +7,7 @@ const CONFIG_FILE = join(CONFIG_DIR, "config.env");
 
 /** Display-friendly path to the config file. */
 export function configPath(): string {
-  return CONFIG_FILE;
+  return "~/.config/context/config.env";
 }
 
 /** Parse a KEY=VALUE env file, stripping comments, blanks, and surrounding quotes. */

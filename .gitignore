@@ -2,3 +2,6 @@ node_modules/
 dist/
 .env
 .conductor/
+
+.DS_Store
+CLAUDE.md
