@@ -107,13 +107,15 @@ export function registerOrderTools(server: Server) {
             })
           );
         } else {
-          result = await client.orders.createMarket({
+          const marketReq: any = {
             marketId: params.marketId,
             outcome: params.outcome,
             side: params.side,
             maxPriceCents: 99,
             maxSize: params.size,
-          });
+          };
+          if (params.expirySeconds !== undefined) marketReq.expirySeconds = params.expirySeconds;
+          result = await client.orders.createMarket(marketReq);
         }
         return toolResult(result);
       } catch (error) {
